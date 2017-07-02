@@ -32,7 +32,9 @@ public class PlayerMovement : MonoBehaviour {
 	[Tooltip("The time in seconds it will take to lerp")]
 	public float VerticalJumpLerp = 1f;
     [Tooltip("The time in seconds before the player may jump again)")]
-    public float VerticalJumpCooldown = 1f;
+	public float VerticalJumpCooldown = 1f;
+    [Tooltip("Player movement speed (for keyboard controls only)")]
+    public float MovementSpeed = 1f;
 
     public LineRenderer DebugLineRenderer;
 
@@ -72,7 +74,7 @@ public class PlayerMovement : MonoBehaviour {
         //This doesn't work right now
         DebugMovement();
 
-        //Update movment based on the type of input (only trackpad/mouse is implemented)
+        //Update movmenet based on the type of input (only trackpad/mouse is implemented)
         if (InputType == InputType.Trackpad)
             TrackPadUpdate();
         else
@@ -109,47 +111,92 @@ public class PlayerMovement : MonoBehaviour {
 
     protected void TrackPadUpdate()
     {
-        //Get the input from the mouse and apply it to the acceleration
+        //Set the acceleration relative to the input
 		if (Mathf.Abs(Input.GetAxis("Mouse X")) > XInputBuffer)
 		{
 			_acceleration.x = Input.GetAxis("Mouse X") * AccelterationMultiplier;
 		}
-        if (Mathf.Abs(Input.GetAxis("Mouse Y")) > YInputBuffer && !_lerping)
-		{
-			_acceleration.y = Input.GetAxis("Mouse Y") * AccelterationMultiplier;
-		}
+		//Vertical acceleration is additive and decays over time
+		_verticalAcceleration += Input.GetAxis("Mouse Y") * 2;
+		var Decay = 1f;
+		Decay -= Time.deltaTime * VerticalDecay;
+		_verticalAcceleration *= Decay;
+
+       
+
         //If the player is lerping do not adjust y (because lerping is fixed)
         if (_lerping)
             _acceleration.y = 0f;
 
         //Add the acceleration force to teh rigid body
-		GetComponent<Rigidbody2D>().AddForce(_acceleration);
+        GetComponent<Rigidbody2D>().AddForce(_acceleration);
         //Clamp the velocity so the play is continuously gliding
-		if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
-		{
-			GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-		}
-
-/////DEBUG
-        _verticalAcceleration += Input.GetAxis("Mouse Y") * 2;
-        var fuff = 1f;
-        fuff -= Time.deltaTime * VerticalDecay;
-		_verticalAcceleration *= fuff;
-        //////
+        if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        }
 
         if (Mathf.Abs(_verticalAcceleration) >= VerticalJumpVelocity && !_lerping && _lerpCooldownTimer.Equals(0f))
         {
             Debug.Log("DID IT");
             _lerpOrigin = transform.position;
-			_lerping = true;
+            _lerping = true;
             var vel = GetComponent<Rigidbody2D>().velocity;
             vel.y = 0f;
             GetComponent<Rigidbody2D>().velocity = vel;
         }
 
+        _acceleration = Vector3.zero;
+    }
+    private void KeyboardUpdate()
+	{
+		//Set the acceleration relative to the input
+		if (Input.GetKey(KeyCode.A))
+		{
+			_acceleration.x = -MovementSpeed * AccelterationMultiplier;
+		}
+		if (Input.GetKey(KeyCode.D))
+		{
+			_acceleration.x = MovementSpeed * AccelterationMultiplier;
+		}
+		//Vertical acceleration is additive and decays over time
+		if (Input.GetKeyDown(KeyCode.W))
+		{
+			_verticalAcceleration += MovementSpeed * 2;
+		}
+		if (Input.GetKeyDown(KeyCode.S))
+		{
+			_verticalAcceleration -= MovementSpeed * 2;
+		}
+		//Reduce vertical acceleration over time
+		var Decay = 1f;
+		Decay -= Time.deltaTime * VerticalDecay;
+		_verticalAcceleration *= Decay;
+
+		//If the player is lerping do not adjust y (because lerping is fixed)
+		if (_lerping)
+			_acceleration.y = 0f;
+
+		//Add the acceleration force to teh rigid body
+		GetComponent<Rigidbody2D>().AddForce(_acceleration);
+		//Clamp the velocity so the play is continuously gliding
+		if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
+		{
+			GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+		}
+
+		if (Mathf.Abs(_verticalAcceleration) >= MovementSpeed && !_lerping && _lerpCooldownTimer.Equals(0f))
+		{
+			Debug.Log("DID IT");
+			_lerpOrigin = transform.position;
+			_lerping = true;
+			var vel = GetComponent<Rigidbody2D>().velocity;
+			vel.y = 0f;
+			GetComponent<Rigidbody2D>().velocity = vel;
+		}
+
 		_acceleration = Vector3.zero;
     }
-    private void KeyboardUpdate(){}
 
     /// <summary>
     /// This doesn't work right now
