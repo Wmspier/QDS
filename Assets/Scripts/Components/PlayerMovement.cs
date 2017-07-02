@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour {
 	private float _lerpTimer;
     private float _lerpCooldownTimer;
     private Vector3 _lerpOrigin;
+    private float _lerpDirection;
 
     private float _verticalAcceleration;
     private float _verticalJumpDistancInternal;
@@ -94,10 +95,8 @@ public class PlayerMovement : MonoBehaviour {
             //Increment time
 			_lerpTimer += Time.fixedDeltaTime;
             var newPos = transform.position;
-            //Find direction based on acceleration
-            var dir = _verticalAcceleration > 0f ? 1 : -1;
             //Adjust the y position based on lerp timer and jump distance
-            newPos.y = Mathf.Lerp(_lerpOrigin.y, _lerpOrigin.y + (_verticalJumpDistancInternal * dir), _lerpTimer / VerticalJumpLerp);
+            newPos.y = Mathf.Lerp(_lerpOrigin.y, _lerpOrigin.y + (_verticalJumpDistancInternal * _lerpDirection), _lerpTimer / VerticalJumpLerp);
 			transform.position = newPos;
             //Reset the timer once we have reached the end
 			if (_lerpTimer >= VerticalJumpLerp)
@@ -140,7 +139,9 @@ public class PlayerMovement : MonoBehaviour {
         {
             Debug.Log("DID IT");
             _lerpOrigin = transform.position;
-            _lerping = true;
+			_lerping = true;
+			//Find direction based on acceleration
+			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
             var vel = GetComponent<Rigidbody2D>().velocity;
             vel.y = 0f;
             GetComponent<Rigidbody2D>().velocity = vel;
@@ -175,7 +176,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		//If the player is lerping do not adjust y (because lerping is fixed)
 		if (_lerping)
-			_acceleration.y = 0f;
+			_verticalAcceleration = 0f;
 
 		//Add the acceleration force to teh rigid body
 		GetComponent<Rigidbody2D>().AddForce(_acceleration);
@@ -190,6 +191,8 @@ public class PlayerMovement : MonoBehaviour {
 			Debug.Log("DID IT");
 			_lerpOrigin = transform.position;
 			_lerping = true;
+			//Find direction based on acceleration
+            _lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
 			var vel = GetComponent<Rigidbody2D>().velocity;
 			vel.y = 0f;
 			GetComponent<Rigidbody2D>().velocity = vel;
