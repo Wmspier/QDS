@@ -12,7 +12,7 @@ public class ApplicationController : Controller
     public void OnApplicationStart(ApplicationEvents.StartUpFinishedEvent e)
 	{
         //Create a load screen event and dispatch it to be picked up by NavicationController
-        EventSystem.instance.Dispatch(new NavigationEvents.LoadSceneEvent(Scenes.StartUp));
+        EventSystem.instance.Dispatch(new NavigationEvents.LoadSceneEvent(Scenes.Main));
         EventSystem.instance.Dispatch(new NavigationEvents.LoadScreenEvent("START"));
     }
 }

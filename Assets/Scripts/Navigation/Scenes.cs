@@ -8,6 +8,5 @@
 public static class Scenes {
 
     public static readonly short Invalid = -1;
-	public static readonly short StartUp = 0;
-	public static readonly short Main = 1;
+	public static readonly short Main = 0;
 }
