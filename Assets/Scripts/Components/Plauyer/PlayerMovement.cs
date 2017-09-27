@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour {
         //This doesn't work right now
         DebugMovement();
 
-        //Update movmenet based on the type of input (only trackpad/mouse is implemented)
+        //Update movmenet based on the type of input
         if (InputType == InputType.Trackpad)
             TrackPadUpdate();
         else
@@ -84,9 +84,10 @@ public class PlayerMovement : MonoBehaviour {
         //Reduce vertical movement cooldown timer if it is active
 		if (!_lerping && _lerpCooldownTimer > 0f)
 		{
-			_lerpCooldownTimer -= Time.fixedDeltaTime;
             if (_lerpCooldownTimer - Time.fixedDeltaTime < 0f)
                 _lerpCooldownTimer = 0f;
+			else
+				_lerpCooldownTimer -= Time.fixedDeltaTime;
 		}
 
         //Handle the vertical movement lerp
@@ -127,9 +128,9 @@ public class PlayerMovement : MonoBehaviour {
         if (_lerping)
             _acceleration.y = 0f;
 
-        //Add the acceleration force to teh rigid body
+        //Add the acceleration force to the rigid body
         GetComponent<Rigidbody2D>().AddForce(_acceleration);
-        //Clamp the velocity so the play is continuously gliding
+        //Clamp the velocity so the player isn't continuously gliding
         if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
         {
             GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -137,7 +138,6 @@ public class PlayerMovement : MonoBehaviour {
 
         if (Mathf.Abs(_verticalAcceleration) >= VerticalJumpVelocity && !_lerping && _lerpCooldownTimer.Equals(0f))
         {
-            Debug.Log("DID IT");
             _lerpOrigin = transform.position;
 			_lerping = true;
 			//Find direction based on acceleration
@@ -188,7 +188,6 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (Mathf.Abs(_verticalAcceleration) >= MovementSpeed && !_lerping && _lerpCooldownTimer.Equals(0f))
 		{
-			Debug.Log("DID IT");
 			_lerpOrigin = transform.position;
 			_lerping = true;
 			//Find direction based on acceleration

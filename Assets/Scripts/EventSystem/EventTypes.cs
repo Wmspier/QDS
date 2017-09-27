@@ -50,5 +50,12 @@ namespace PopupEvents{
 }
 
 namespace GameEvents{
-    public struct InitializeGameEvent : BaseEvent {}
+	public struct InitializeGameEvent : BaseEvent { }
+	public struct ElementCollisionEvent : BaseEvent {
+        public bool SameType;
+		public ElementCollisionEvent(bool same)
+		{
+			SameType = same;
+		}
+    }
 }
