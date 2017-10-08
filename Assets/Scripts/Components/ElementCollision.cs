@@ -45,6 +45,11 @@ public class ElementCollision : MonoBehaviour {
 			{
 				EventSystem.instance.Dispatch(new GameEvents.ElementCollisionEvent(true));
 				Debug.LogWarning("<color=green>SAME TYPES!!!!</color>");
+
+                if(GetComponent<ElementCollection>() != null)
+				{
+					GetComponent<ElementCollection>().AddElement();
+                }
 			}
             Destroy(collision.gameObject);
         }
