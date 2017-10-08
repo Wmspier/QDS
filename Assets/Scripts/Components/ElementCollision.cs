@@ -5,9 +5,13 @@ using UnityEngine;
 public class ElementCollision : MonoBehaviour {
 
     public PlayerLives PlayerLifeReference;
+    public bool Enabled = true;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!Enabled)
+            return;
+        
         var myType = GetComponent<ElementType>();
         var theirType = collision.gameObject.GetComponent<ElementType>();
 
@@ -28,11 +32,11 @@ public class ElementCollision : MonoBehaviour {
                                         ,myType.CurrentTypes[1]
                                         ,theirType.CurrentTypes[0]
                                         ,theirType.CurrentTypes[1]));
-                
-                if (PlayerLifeReference.Lives > 0)
+
+				EventSystem.instance.Dispatch(new GameEvents.ElementCollisionEvent(false));
+				Debug.LogWarning("<color=blue>DIFF TYPES!!!!</color>");
+                if (PlayerLifeReference != null && PlayerLifeReference.Lives > 0)
 				{
-					EventSystem.instance.Dispatch(new GameEvents.ElementCollisionEvent(false));
-                    Debug.LogWarning("<color=blue>DIFF TYPES!!!!</color>");
 					PlayerLifeReference.Lives--;
 				}
             }

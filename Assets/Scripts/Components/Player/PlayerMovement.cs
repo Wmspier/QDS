@@ -16,7 +16,6 @@ public enum KeyboardType
 /// <summary>
 /// A component for applying forces based on trackpad or keyboard input
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour {
 
     [Tooltip("The type of input that will be applied as force")]
@@ -53,6 +52,11 @@ public class PlayerMovement : MonoBehaviour {
         get { return _lerpDirection; }
     }
 
+    public Rigidbody2D RigidBody
+    {
+        set { _rigidBody = value; }
+    }
+
 	private Vector3 _acceleration = Vector3.zero;
     private bool _initialized = false;
 
@@ -62,6 +66,7 @@ public class PlayerMovement : MonoBehaviour {
     private float _lerpCooldownTimer;
     private Vector3 _lerpOrigin;
     private float _lerpDirection;
+    private Rigidbody2D _rigidBody;
 
     private float _verticalAcceleration;
     private float _verticalJumpDistancInternal;
@@ -75,6 +80,7 @@ public class PlayerMovement : MonoBehaviour {
     private void Initialize(GameEvents.InitializeGameEvent e)
     {
         _initialized = true;
+        _rigidBody = GetComponent<Rigidbody2D>();
         _verticalJumpDistancInternal = Screen.height * VerticalJumpDistance;
     }
 
@@ -144,11 +150,11 @@ public class PlayerMovement : MonoBehaviour {
             _acceleration.y = 0f;
 
         //Add the acceleration force to the rigid body
-        GetComponent<Rigidbody2D>().AddForce(_acceleration);
+        _rigidBody.AddForce(_acceleration);
         //Clamp the velocity so the player isn't continuously gliding
-        if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
+        if (Mathf.Abs(_rigidBody.velocity.x) <= Velocityclamp)
         {
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            _rigidBody.velocity = Vector3.zero;
         }
 
         if (Mathf.Abs(_verticalAcceleration) >= VerticalJumpVelocity && !_lerping && _lerpCooldownTimer.Equals(0f))
@@ -157,9 +163,9 @@ public class PlayerMovement : MonoBehaviour {
 			_lerping = true;
 			//Find direction based on acceleration
 			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
-            var vel = GetComponent<Rigidbody2D>().velocity;
+            var vel = _rigidBody.velocity;
             vel.y = 0f;
-            GetComponent<Rigidbody2D>().velocity = vel;
+            _rigidBody.velocity = vel;
         }
 
         _acceleration = Vector3.zero;
@@ -194,11 +200,11 @@ public class PlayerMovement : MonoBehaviour {
 			_verticalAcceleration = 0f;
 
 		//Add the acceleration force to teh rigid body
-		GetComponent<Rigidbody2D>().AddForce(_acceleration);
+		_rigidBody.AddForce(_acceleration);
 		//Clamp the velocity so the play is continuously gliding
-		if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x) <= Velocityclamp)
+		if (Mathf.Abs(_rigidBody.velocity.x) <= Velocityclamp)
 		{
-			GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+			_rigidBody.velocity = Vector3.zero;
 		}
 
 		if (Mathf.Abs(_verticalAcceleration) >= MovementSpeed && !_lerping && _lerpCooldownTimer.Equals(0f))
@@ -207,9 +213,9 @@ public class PlayerMovement : MonoBehaviour {
 			_lerping = true;
 			//Find direction based on acceleration
             _lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
-			var vel = GetComponent<Rigidbody2D>().velocity;
+			var vel = _rigidBody.velocity;
 			vel.y = 0f;
-			GetComponent<Rigidbody2D>().velocity = vel;
+			_rigidBody.velocity = vel;
 		}
 
 		_acceleration = Vector3.zero;

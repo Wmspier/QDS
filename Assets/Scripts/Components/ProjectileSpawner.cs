@@ -22,6 +22,7 @@ public class ProjectileSpawner : MonoBehaviour {
 
     private float _timer = 0f;
     private Vector2 _origin;
+    private List<int> _playerTypes = new List<int>();
 	private readonly List<int> _spawnHistory = new List<int>();
 	private readonly List<Sprite> _projectileHistory = new List<Sprite>();
     private List<Sprite> _spriteList = new List<Sprite>();
@@ -39,6 +40,12 @@ public class ProjectileSpawner : MonoBehaviour {
         _spriteList = PlayerTypeReference.Types;
         _projectileContainer = new GameObject("[Projectile_Container]");
         _projectileContainer.transform.parent = transform.parent;
+
+        foreach(var playerType in FindObjectsOfType<ElementType>())
+        {
+            _playerTypes.Add(playerType.CurrentTypes[0]);
+            Debug.Log(playerType.CurrentTypes[0]);
+        }
     }
 	
 	// Update is called once per frame
@@ -81,19 +88,15 @@ public class ProjectileSpawner : MonoBehaviour {
         }
 
         //Find a random projectile sprite that is not within the history
-        var spriteIndex = Random.Range(0, _spriteList.Count);
-        while(_projectileHistory.Contains(_spriteList[spriteIndex]))
-        {
-            spriteIndex = Random.Range(0, _spriteList.Count);
-        }
+        var spriteIndex = _playerTypes[Random.Range(0, _playerTypes.Count)];
         _projectileHistory.Add(_spriteList[spriteIndex]);
 
-        //TEST
-        var otherSpriteIndex = Random.Range(0, _spriteList.Count);
+        var otherSpriteIndex = _playerTypes[Random.Range(0, _playerTypes.Count)];
 
         var projectile = Instantiate(ProjectilePrefab, spawnPosition, new Quaternion(), _projectileContainer.transform);
 		var projectileType = projectile.GetComponent<ElementType>();
         projectileType.Types = PlayerTypeReference.Types;
+        projectileType.transform.localScale = Vector3.one;
 
         var randForMulti = Random.Range(0, 10);
         if((MultiTypeChance * 10f) > randForMulti)

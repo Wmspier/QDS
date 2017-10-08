@@ -48,6 +48,14 @@ public class ElementCombination : MonoBehaviour {
         _combinedElement = combinedElement.GetComponent<ElementType>();
 
         _combinedElement.CurrentTypes = new List<int>() { type1, type2 };
+
+        //      _otherElement.GetComponent<PlayerMovement>().RigidBody = combinedElement.GetComponent<Rigidbody2D>();
+        //      GetComponent<PlayerMovement>().RigidBody = combinedElement.GetComponent<Rigidbody2D>();
+        //Destroy(_otherElement.GetComponent<Rigidbody2D>());
+        //Destroy(GetComponent<Rigidbody2D>());
+
+        _otherElement.GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
     }
 
     private void Update()
@@ -67,6 +75,19 @@ public class ElementCombination : MonoBehaviour {
 		if (otherMovement.IsLerping)
 			playerMovement.SetLerpManual(otherMovement.LerpDirection);
 
+        if(!transform.position.y.Equals(_combinedElement.transform.position.y))
+        {
+            var newPos = transform.position;
+            newPos.y = _combinedElement.transform.position.y;
+            transform.position = newPos;
+        }
+        if (!_otherElement.transform.position.y.Equals(_combinedElement.transform.position.y))
+		{
+			var newPos = _otherElement.transform.position;
+			newPos.y = _combinedElement.transform.position.y;
+			_otherElement.transform.position = newPos;
+		}
+
         if (Mathf.Abs(_otherElement.transform.position.x - transform.position.x) > DetachThreshold)
         {
             Detach();
@@ -83,6 +104,9 @@ public class ElementCombination : MonoBehaviour {
 
         _otherElement.GetComponent<ElementType>().Enable();
         GetComponent<ElementType>().Enable();
+
+        _otherElement.GetComponent<CircleCollider2D>().enabled = true;
+        GetComponent<CircleCollider2D>().enabled = true;
 
         StartCoroutine(CombineCooldown());
     }
