@@ -39,7 +39,9 @@ public class PlayerMovement : MonoBehaviour {
     [Tooltip("The time in seconds before the player may jump again)")]
 	public float VerticalJumpCooldown = 1f;
     [Tooltip("Player movement speed (for keyboard controls only)")]
-    public float MovementSpeed = 1f;
+	public float MovementSpeed = 1f;
+	[Tooltip("The number of vertical jumps the player can make in either direction")]
+    public int VerticalJumpLimit = 2;
 
     public LineRenderer DebugLineRenderer;
 
@@ -70,6 +72,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private float _verticalAcceleration;
     private float _verticalJumpDistancInternal;
+    private float _verticalJumpIndex;
 ///
 
     private void Start()
@@ -158,11 +161,15 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         if (Mathf.Abs(_verticalAcceleration) >= VerticalJumpVelocity && !_lerping && _lerpCooldownTimer.Equals(0f))
-        {
-            _lerpOrigin = transform.position;
-			_lerping = true;
+		{
 			//Find direction based on acceleration
 			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
+			if (Mathf.Abs(_verticalJumpIndex + _lerpDirection) > VerticalJumpLimit)
+				return;
+
+			_verticalJumpIndex += _lerpDirection;
+            _lerpOrigin = transform.position;
+			_lerping = true;
             var vel = _rigidBody.velocity;
             vel.y = 0f;
             _rigidBody.velocity = vel;
@@ -209,10 +216,14 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (Mathf.Abs(_verticalAcceleration) >= MovementSpeed && !_lerping && _lerpCooldownTimer.Equals(0f))
 		{
+			//Find direction based on acceleration
+			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
+            if (Mathf.Abs(_verticalJumpIndex + _lerpDirection) > VerticalJumpLimit)
+                return;
+            
+            _verticalJumpIndex += _lerpDirection;
 			_lerpOrigin = transform.position;
 			_lerping = true;
-			//Find direction based on acceleration
-            _lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
 			var vel = _rigidBody.velocity;
 			vel.y = 0f;
 			_rigidBody.velocity = vel;

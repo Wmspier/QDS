@@ -39,6 +39,12 @@ public class ElementCollision : MonoBehaviour {
 				{
 					PlayerLifeReference.Lives--;
 				}
+
+
+                if(GetComponent<ElementCollection>() != null)
+                {
+                    GetComponent<ElementCollection>().RemoveElement();
+                }
             }
             //Both types are the same
             else

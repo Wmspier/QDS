@@ -44,8 +44,9 @@ public class ProjectileSpawner : MonoBehaviour {
         foreach(var playerType in FindObjectsOfType<ElementType>())
         {
             _playerTypes.Add(playerType.CurrentTypes[0]);
-            Debug.Log(playerType.CurrentTypes[0]);
         }
+        if (_playerTypes.Count == 0)
+            this.enabled = false;
     }
 	
 	// Update is called once per frame

@@ -21,4 +21,10 @@ public class ElementCollection : MonoBehaviour {
         var elementType = GetComponent<ElementType>();
         element.GetComponent<ElementType>().CurrentTypes = elementType.CurrentTypes;
     }
+
+    public void RemoveElement()
+    {
+        if (CollectionObject.transform.childCount > 0)
+            Destroy(CollectionObject.transform.GetChild(0).gameObject);
+    }
 }
