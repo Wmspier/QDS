@@ -7,6 +7,11 @@ public enum InputType
     Keyboard,
     Trackpad
 }
+public enum KeyboardType
+{
+    WASD,
+    Arrows
+}
 
 /// <summary>
 /// A component for applying forces based on trackpad or keyboard input
@@ -16,6 +21,7 @@ public class PlayerMovement : MonoBehaviour {
 
     [Tooltip("The type of input that will be applied as force")]
 	public InputType InputType = InputType.Trackpad;
+    public KeyboardType KeyboardType = KeyboardType.WASD;
 	[Tooltip("The minimum velocity")]
 	public float Velocityclamp = 10f;
 	[Tooltip("The scalar applied to the input axis vector")]
@@ -161,20 +167,20 @@ public class PlayerMovement : MonoBehaviour {
     private void KeyboardUpdate()
 	{
 		//Set the acceleration relative to the input
-		if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyboardType == KeyboardType.WASD ? KeyCode.A : KeyCode.LeftArrow))
 		{
 			_acceleration.x = -MovementSpeed * AccelterationMultiplier;
 		}
-		if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyboardType == KeyboardType.WASD ? KeyCode.D : KeyCode.RightArrow))
 		{
 			_acceleration.x = MovementSpeed * AccelterationMultiplier;
 		}
 		//Vertical acceleration is additive and decays over time
-		if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKey(KeyboardType == KeyboardType.WASD ? KeyCode.W : KeyCode.UpArrow))
 		{
 			_verticalAcceleration += MovementSpeed * 2;
 		}
-		if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyboardType == KeyboardType.WASD ? KeyCode.S : KeyCode.DownArrow))
 		{
 			_verticalAcceleration -= MovementSpeed * 2;
 		}
