@@ -38,6 +38,15 @@ public class PlayerMovement : MonoBehaviour {
 
     public LineRenderer DebugLineRenderer;
 
+    public bool IsLerping
+    {
+        get { return _lerping; }
+    }
+    public float LerpDirection
+    {
+        get { return _lerpDirection; }
+    }
+
 	private Vector3 _acceleration = Vector3.zero;
     private bool _initialized = false;
 
@@ -226,5 +235,15 @@ public class PlayerMovement : MonoBehaviour {
 			LineRenderer.material.color = Color.green;
 		}
         LineRenderer.SetPosition(1, otherPos);
+    }
+
+    public void SetLerpManual(float direction)
+    {
+        if (_lerping || _lerpCooldownTimer > 0f) 
+            return;
+
+		_lerpDirection = direction;
+		_lerpOrigin = transform.position;
+		_lerping = true;
     }
 }

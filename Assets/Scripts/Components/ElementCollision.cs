@@ -50,8 +50,16 @@ public class ElementCollision : MonoBehaviour {
 	{
         if(player1.CurrentTypes[0] == player1.CurrentTypes[1])
 		{
-			player1.CurrentTypes[1] = player2.CurrentTypes[0];
-			player2.CurrentTypes[1] = player1.CurrentTypes[0];
+            var player1Combination = player1.gameObject.GetComponent<ElementCombination>();
+            var player2Combination = player2.gameObject.GetComponent<ElementCombination>();
+            if(player1Combination != null && player2Combination != null)
+            {
+                player1Combination.Combine(player2);
+                player2Combination.Combine(player1);
+            }
+
+			//player1.CurrentTypes[1] = player2.CurrentTypes[0];
+			//player2.CurrentTypes[1] = player1.CurrentTypes[0];
         }
     }
 }

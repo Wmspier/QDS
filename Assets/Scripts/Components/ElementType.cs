@@ -85,4 +85,14 @@ public class ElementType : MonoBehaviour {
         return colorList;
     }
 
+    public void Disable()
+    {
+        SingleTypeImage.enabled = false;
+    }
+
+
+	public void Enable()
+	{
+		SingleTypeImage.enabled = true;
+	}
 }
