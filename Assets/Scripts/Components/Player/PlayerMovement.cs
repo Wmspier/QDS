@@ -66,7 +66,8 @@ public class PlayerMovement : MonoBehaviour {
     private bool _lerping;
 	private float _lerpTimer;
     private float _lerpCooldownTimer;
-    private Vector3 _lerpOrigin;
+	private Vector3 _lerpOrigin;
+	private Vector3 _origin;
     private float _lerpDirection;
     private Rigidbody2D _rigidBody;
 
@@ -75,7 +76,7 @@ public class PlayerMovement : MonoBehaviour {
     private float _verticalJumpIndex;
 ///
 
-    private void Start()
+    private void Awake()
     {
         EventSystem.instance.Connect<GameEvents.InitializeGameEvent>(Initialize);
     }
@@ -83,6 +84,7 @@ public class PlayerMovement : MonoBehaviour {
     private void Initialize(GameEvents.InitializeGameEvent e)
     {
         _initialized = true;
+        _origin = transform.position;
         _rigidBody = GetComponent<Rigidbody2D>();
         _verticalJumpDistancInternal = Screen.height * VerticalJumpDistance;
     }
@@ -131,6 +133,22 @@ public class PlayerMovement : MonoBehaviour {
                 _lerpCooldownTimer = VerticalJumpCooldown;
 			}
 		}
+
+		//Vertical Movement Limiting
+		var minY = _origin.y - _verticalJumpDistancInternal * VerticalJumpLimit;
+		var maxY = _origin.y + _verticalJumpDistancInternal * VerticalJumpLimit;
+        if(transform.position.y < minY)
+        {
+            var newPos = transform.position;
+            newPos.y = minY;
+            transform.position = newPos;
+        }
+		if (transform.position.y > maxY)
+		{
+			var newPos = transform.position;
+			newPos.y = maxY;
+			transform.position = newPos;
+		}
 	}
 
     protected void TrackPadUpdate()
@@ -164,8 +182,6 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			//Find direction based on acceleration
 			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
-			if (Mathf.Abs(_verticalJumpIndex + _lerpDirection) > VerticalJumpLimit)
-				return;
 
 			_verticalJumpIndex += _lerpDirection;
             _lerpOrigin = transform.position;
@@ -218,8 +234,6 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			//Find direction based on acceleration
 			_lerpDirection = _verticalAcceleration > 0f ? 1 : -1;
-            if (Mathf.Abs(_verticalJumpIndex + _lerpDirection) > VerticalJumpLimit)
-                return;
             
             _verticalJumpIndex += _lerpDirection;
 			_lerpOrigin = transform.position;
