@@ -14,7 +14,7 @@ public class ProjectileMovement : MonoBehaviour {
     {
         _spriteWidth = GetComponent<ElementType>().Types[0].rect.width * transform.lossyScale.x;
         _speed = Speed * _spriteWidth;
-        _killPosition.x = Screen.width;
+        _killPosition.x = Screen.width * 1.15f;
         _killPosition.y = Screen.height;
 
     }
@@ -25,7 +25,7 @@ public class ProjectileMovement : MonoBehaviour {
         newPosition.y += Time.deltaTime * Direction.y * _speed;
         transform.position = newPosition;
 
-        if(/*newPosition.y > _killPosition.y || */newPosition.x > _killPosition.x)
+        if (newPosition.x > _killPosition.x || newPosition.x < -_killPosition.x / 10f)
         {
             Destroy(gameObject);
         }

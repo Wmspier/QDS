@@ -40,6 +40,7 @@ public class ProjectileSpawner : MonoBehaviour {
         _spriteList = PlayerTypeReference.Types;
         _projectileContainer = new GameObject("[Projectile_Container]");
         _projectileContainer.transform.parent = transform.parent;
+        _projectileContainer.transform.position = Vector3.zero;
 
         foreach(var playerType in FindObjectsOfType<ElementType>())
         {
