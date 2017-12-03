@@ -1,5 +1,7 @@
 Library/
 Temp/
+obj/
+.vs/
 
 
 {\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
