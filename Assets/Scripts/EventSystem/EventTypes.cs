@@ -1,4 +1,6 @@
-﻿public interface BaseEvent{}
+﻿using System.Collections.Generic;
+
+public interface BaseEvent{ }
 
 namespace NavigationEvents{ 
     public struct LoadSceneEvent : BaseEvent {
@@ -60,10 +62,12 @@ namespace GameEvents{
     }
     public struct PlanetStructureEvent : BaseEvent
     {
-        public bool SameType;
-        public PlanetStructureEvent(bool same)
+        public List<int> ElementDistributionList;
+        public int Total;
+        public PlanetStructureEvent(int total, List<int> _elementDistributionList)
         {
-            SameType = same;
+            ElementDistributionList = _elementDistributionList;
+            Total = total;
         }
     }
 }

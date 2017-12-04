@@ -28,7 +28,6 @@ public class PlanetCreation : MonoBehaviour {
         {
             sum += value;
         });
-        Debug.Log("Sum: " + sum);
         return sum;
     }
 
@@ -41,5 +40,8 @@ public class PlanetCreation : MonoBehaviour {
                                                                            PlayerTypesRef.Types[i].name,
                                                                            Mathf.Round((float)_elementDistributionList[i] /(float)GetTotalCollectedElements() * 100f));
         }
+
+        EventSystem.instance.Dispatch(new GameEvents.PlanetStructureEvent(GetTotalCollectedElements(), _elementDistributionList));
     }
+    
 }
