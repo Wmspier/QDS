@@ -30,6 +30,7 @@ public class MusicPlayer : MonoBehaviour
     public void PlayCatch(GameEvents.ElementCollisionEvent e)
     {
         int randClip = Random.Range(0, catches.Length);
+        Debug.Log("Rand " + randClip);
         catchesSource.clip = catches[randClip];
         catchesSource.Play();
     }

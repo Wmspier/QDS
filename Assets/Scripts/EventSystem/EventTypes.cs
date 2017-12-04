@@ -58,4 +58,12 @@ namespace GameEvents{
 			SameType = same;
 		}
     }
+    public struct PlanetStructureEvent : BaseEvent
+    {
+        public bool SameType;
+        public PlanetStructureEvent(bool same)
+        {
+            SameType = same;
+        }
+    }
 }

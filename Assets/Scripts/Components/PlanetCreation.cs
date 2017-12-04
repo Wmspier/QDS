@@ -9,7 +9,6 @@ public class PlanetCreation : MonoBehaviour {
     public int MinElemenetsReq = 5;
 
     private List<int> _elementDistributionList;
-    private int _totalCollectedElements;
 
 	// Use this for initialization
 	void Start () {
@@ -22,15 +21,25 @@ public class PlanetCreation : MonoBehaviour {
         }
 	}
 
+    public int GetTotalCollectedElements()
+    {
+        int sum = 0;
+        _elementDistributionList.ForEach(delegate (int value)
+        {
+            sum += value;
+        });
+        Debug.Log("Sum: " + sum);
+        return sum;
+    }
+
     public void AddType(int typeIndex, int amount)
     {
         _elementDistributionList[typeIndex] += amount;
-        _totalCollectedElements += amount;
-            for (var i = 0; i < DebugScriptRef.ElementDistributionList.Count; i++)
+        for (var i = 0; i < DebugScriptRef.ElementDistributionList.Count; i++)
         {
             DebugScriptRef.ElementDistributionList[i].text = string.Format("{0}: {1} %",
                                                                            PlayerTypesRef.Types[i].name,
-                                                                           Mathf.Round((float)_elementDistributionList[i] /(float)_totalCollectedElements * 100f));
+                                                                           Mathf.Round((float)_elementDistributionList[i] /(float)GetTotalCollectedElements() * 100f));
         }
     }
 }
