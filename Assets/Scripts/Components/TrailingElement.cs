@@ -8,6 +8,6 @@ public class TrailingElement : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Rigidbody2D>().velocity = Player.GetComponent<Rigidbody2D>().velocity;
+        // GetComponent<Rigidbody2D>().velocity = Player.GetComponent<Rigidbody2D>().velocity;
 	}
 }
