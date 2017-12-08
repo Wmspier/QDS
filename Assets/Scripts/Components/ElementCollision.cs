@@ -27,14 +27,7 @@ public class ElementCollision : MonoBehaviour {
             //Either the first or second types are not equal
             if (myType.CurrentTypes[0] != theirType.CurrentTypes[0] || myType.CurrentTypes[1] != theirType.CurrentTypes[1])
             {
-                Debug.Log(string.Format("My Type(s):D {0},{1}  |  Their Type(s):D{2},{3}", 
-                                        myType.CurrentTypes[0]
-                                        ,myType.CurrentTypes[1]
-                                        ,theirType.CurrentTypes[0]
-                                        ,theirType.CurrentTypes[1]));
-
 				EventSystem.instance.Dispatch(new GameEvents.ElementCollisionEvent(false));
-				Debug.LogWarning("<color=blue>DIFF TYPES!!!!</color>");
                 if (PlayerLifeReference != null && PlayerLifeReference.Lives > 0)
 				{
 					PlayerLifeReference.Lives--;

@@ -12,6 +12,7 @@ public class ElementType : MonoBehaviour {
     public PlayerLives PlayerLivesReference;
     public List<Image> SubtypeImages;
     public Image SingleTypeImage;
+    public bool UsedForSpawner;
 
     public bool SetActivate { set { _active = value; }}
 
@@ -39,6 +40,8 @@ public class ElementType : MonoBehaviour {
 
     public void UpdateSprites()
 	{
+        if (UsedForSpawner)
+            return;
 		_typesInternal[0] = CurrentTypes[0];
 		_typesInternal[1] = CurrentTypes[1];
 
