@@ -156,7 +156,7 @@ public class PlayerMovement : MonoBehaviour {
         //Set the acceleration relative to the input
 		if (Mathf.Abs(Input.GetAxis("Mouse X")) > XInputBuffer)
 		{
-			_acceleration.x = Input.GetAxis("Mouse X") * AccelterationMultiplier;
+			_acceleration.x = Input.GetAxis("Mouse X") * AccelterationMultiplier * -1;
 		}
 		//Vertical acceleration is additive and decays over time
 		_verticalAcceleration += Input.GetAxis("Mouse Y") * 2;
